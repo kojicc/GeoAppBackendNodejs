@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        Int      @id @default(autoincrement()) // Unique number for each user
+  email     String   @unique                       // Email address (must be unique)
+  password  String                                 // Hashed password for security
+  name      String?                                // Optional name
+  createdAt DateTime @default(now())               // When they joined
+  updatedAt DateTime @updatedAt                    // Last update time
+
+  searchHistories SearchHistory[]
+
+  @@map("users") // Table name in database
+}
+
+model SearchHistory {
+  id          Int      @id @default(autoincrement()) // Unique number for each search
+  ipAddress   String                                 // The IP they searched for
+  city        String?                                // City found for that IP
+  region      String?                                // State/Province found
+  country     String?                                // Country found
+  location    String?                                // Latitude,Longitude coordinates
+  timezone    String?                                // Timezone of the location
+  org         String?                                // Organization/ISP info
+  searchedAt  DateTime @default(now())               // When they searched this
+  
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("search_histories") // Table name in database
+}
