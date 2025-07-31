@@ -38,7 +38,7 @@ app.listen(PORT, async () => {
   // Test database connection
   try {
     await prisma.$connect();
-    console.log("Database connected successfully");
+    console.log("Database connected successfully")
     
     // Check if test user exists
     const testUser = await prisma.user.findUnique({
